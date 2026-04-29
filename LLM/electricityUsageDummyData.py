@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from fastapi import FastAPI
+
 # Simulate hourly electricity usage for 7 days 
 hours = pd.date_range("2026-04-01", periods=24*7, freq="h")
 usage = np.random.randint(200, 800, size=len(hours)) # watts
@@ -22,14 +24,12 @@ print("Average usage by hour:\n", peak_hours)
 
 def suggest_optimizations(df):
     avg_usage = df.groupby(df["time"].dt.hour)["usage_watts"].mean()
-    peak_hour = avg_usage.idmax()
-    low_hour = avg_usage.idxmin
+    peak_hour = avg_usage.idxmax()
+    low_hour = avg_usage.idxmin()
 
     return f"Peak usage is at {peak_hour}: 00. Consider running heavy appliances at {low_hour}: 00 to save energy and reduce costs."
 
 print(suggest_optimizations(df))
-
-from fastapi import FastAPI
 
 app = FastAPI()
 
